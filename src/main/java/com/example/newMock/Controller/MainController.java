@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
+import java.util.Random;
 
 @RestController
 public class MainController {
@@ -30,21 +31,30 @@ public class MainController {
             String clientId = requestDTO.getClientId();
             char firstDigit = clientId.charAt(0);
             BigDecimal maxLimit;
+            String newCurrency;
+            int randBalance;
 
             if (firstDigit == '8'){
                 maxLimit = new BigDecimal(2000.00);
+                newCurrency = "EUR";
+                randBalance = (int )(Math.random() * 2000 + 1);
             } else if (firstDigit == '9'){
                 maxLimit = new BigDecimal(1000.00);
-            } else maxLimit = new BigDecimal(10000.00);
-
-            String RqUID = requestDTO.getRqUID();
+                newCurrency = "USD";
+                randBalance = (int )(Math.random() * 1000 + 1);
+            } else {
+                maxLimit = new BigDecimal(10000.00);
+                newCurrency = "RUB";
+                randBalance = (int )(Math.random() * 10000 + 1);
+            }
 
             ResponseDTO responseDTO = new ResponseDTO();
 
-            responseDTO.setRqUID(RqUID);
+            responseDTO.setClientId(requestDTO.getClientId());
+            responseDTO.setRqUID(requestDTO.getRqUID());
             responseDTO.setAccount(requestDTO.getAccount());
-            responseDTO.setCurrency("RUB");
-            responseDTO.setBalance("1000.00");
+            responseDTO.setCurrency(newCurrency);
+            responseDTO.setBalance(randBalance);
             responseDTO.setMaxLimit(maxLimit);
 
             log.error("****** RequestDTO ******" + mapper.writerWithDefaultPrettyPrinter().writeValueAsString(requestDTO));
